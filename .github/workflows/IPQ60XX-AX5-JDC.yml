@@ -1,4 +1,4 @@
-name: IPQ60XX-AX5-JDC
+name: IPQ60XX-AX5-JDC-6.12
 
 on:
   workflow_dispatch:
@@ -6,15 +6,15 @@ on:
     - cron: 0 19 * * 5
 
 env:
-  REPO_URL: https://github.com/LiBwrt-op/openwrt-6.x.git
-  REPO_BRANCH: main
-  CONFIG_FILE: configs/ipq60xx-ax5-jdc.config
-  DIY_SCRIPT: diy-script.sh
+  REPO_URL: https://github.com/LiBwrt/openwrt-6.x.git
+  REPO_BRANCH: k6.12-nss
+  CONFIG_FILE: configs/ipq60xx-ax5-jdc-6.12.config
+  DIY_SCRIPT: libwrt.sh
   CLASH_KERNEL: amd64
   CACHE_TOOLCHAIN: true
   UPLOAD_BIN_DIR: false
   FIRMWARE_RELEASE: true
-  FIRMWARE_TAG: IPQ60XX-AX5-JDC
+  FIRMWARE_TAG: IPQ60XX-AX5-JDC-6.12
   TZ: Asia/Shanghai
 
 jobs:
@@ -68,14 +68,8 @@ jobs:
         echo "OPENWRT_PATH=$PWD" >> $GITHUB_ENV
         VERSION_INFO=$(git show -s --date=short --format="作者: %an<br/>时间: %cd<br/>内容: %s<br/>hash: %H")
         echo "VERSION_INFO=$VERSION_INFO" >> $GITHUB_ENV
-        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' include/kernel-6.6)
+        VERSION_KERNEL=$(grep -oP 'LINUX_KERNEL_HASH-\K[0-9]+\.[0-9]+\.[0-9]+' target/linux/generic/kernel-6.12)
         echo "VERSION_KERNEL=$VERSION_KERNEL" >> $GITHUB_ENV
-        if git log --since="$(date -d 'yesterday 00:00' '+%Y-%m-%dT%H:%M:%S')" --until="$(date -d 'today 00:00' '+%Y-%m-%dT%H:%M:%S')" --pretty=format:"%h %s" --no-merges -- . ':(exclude)scripts/feeds' | grep -q .; then
-        VERSION_LOG=$(git log --since="$(date -d 'yesterday 00:00' '+%Y-%m-%dT%H:%M:%S')" --until="$(date -d 'today 00:00' '+%Y-%m-%dT%H:%M:%S')" --pretty=format:"%h %s" --no-merges -- . ':(exclude)scripts/feeds')
-        echo "VERSION_LOG=$VERSION_LOG" >> $GITHUB_ENV
-        else
-        echo "VERSION_LOG=暂无更新" >> $GITHUB_ENV
-        fi
 
     - name: Generate Variables(生成变量)
       run: |
@@ -101,12 +95,19 @@ jobs:
       run: |
         cd $OPENWRT_PATH
         ./scripts/feeds update -a
+        git clone --depth 1 https://github.com/sbwml/openwrt_pkgs.git package/new/custom
+        mv package/new/custom/luci-app-netspeedtest  package/new
+        mv package/new/custom/speedtest-cli package/new
+        rm -rf package/new/custom
         ./scripts/feeds install -a
   
     - name: Load Custom Configuration(加载自定义配置)
       run: |
         [ -e files ] && mv files $OPENWRT_PATH/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE $OPENWRT_PATH/.config
+        chmod +x $DIY_SCRIPT
+        cd $OPENWRT_PATH
+        $GITHUB_WORKSPACE/$DIY_SCRIPT
 
     - name: Download DL Package(下载DL软件包)
       run: |
@@ -143,7 +144,7 @@ jobs:
         cd $OPENWRT_PATH/bin/targets/*/*
         cat sha256sums
         cp $OPENWRT_PATH/.config build.config
-        mv -f $OPENWRT_PATH/bin/packages/*/*/*.ipk packages
+        mv -f $OPENWRT_PATH/bin/packages/*/*/*.apk packages
         tar -zcf Packages.tar.gz packages
         rm -rf packages feeds.buildinfo version.buildinfo
         echo "FIRMWARE_PATH=$PWD" >> $GITHUB_ENV
@@ -166,8 +167,8 @@ jobs:
         artifacts: ${{ env.FIRMWARE_PATH }}/*
         body: |
           **This is OpenWrt Firmware for ${{ env.FIRMWARE_TAG }}**
-          ### 📒 固件信息(带WIFI)
-          - 这是带WIFI以及NSS的6.6内核固件
+          ### 📒 固件信息(WIFI)
+          - 带WIFI带有线NSS的6.12内核固件
           - 💻 这是 ${{ env.FIRMWARE_TAG }} 平台使用的 OpenWrt 固件
           - ⚽ 固件源码: ${{ env.REPO_URL }}
           - 💝 源码分支: ${{ env.REPO_BRANCH }}
@@ -177,5 +178,3 @@ jobs:
           - 固件内核版本：${{ env.VERSION_KERNEL }}
           - 固件编译前最后一次➦[主源码](${{ env.REPO_URL }})更新记录
           - ${{ env.VERSION_INFO }}
-          - 源码更新日志
-            ${{ env.VERSION_LOG }}
