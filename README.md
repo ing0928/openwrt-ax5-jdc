@@ -16,7 +16,7 @@
 点击下表中 [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?style=flat&logo=hack-the-box)](https://github.com/haiibo/OpenWrt/releases) 即可跳转到该设备固件下载页面
 | 平台+设备名称 | 固件编译状态 | 配置文件 | 固件下载 |
 | :-------------: | :-------------: | :-------------: | :-------------: |
-| [![](https://img.shields.io/badge/AX5_JDC-WIFI-32C955.svg?logo=openwrt)](https://github.com/ing0928/openwrt-ax5-jdc/blob/main/.github/workflows/IPQ60XX-AX5-JDC.yml) | [![](https://github.com/ing0928/openwrt-ax5-jdc/actions/workflows/IPQ60XX-AX5-JDC.yml/badge.svg)](https://github.com/ing0928/openwrt-ax5-jdc/actions/workflows/IPQ60XX-AX5-JDC.yml) | [![](https://img.shields.io/badge/编译-配置-orange.svg?logo=apache-spark)](https://github.com/ing0928/openwrt-ax5-jdc/blob/main/configs/ipq60xx-ax5-jdc.config) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/ing0928/openwrt-ax5-jdc/releases/IPQ60XX-AX5-JDC) |
+| [![](https://img.shields.io/badge/AX5_JDC-WIFI-32C955.svg?logo=openwrt)](https://github.com/ing0928/openwrt-ax5-jdc/blob/main/.github/workflows/IPQ60XX-AX5-JDC.yml) | [![](https://github.com/ing0928/openwrt-ax5-jdc/actions/workflows/IPQ60XX-AX5-JDC.yml/badge.svg)](https://github.com/ing0928/openwrt-ax5-jdc/actions/workflows/IPQ60XX-AX5-JDC.yml) | [![](https://img.shields.io/badge/编译-配置-orange.svg?logo=apache-spark)](https://github.com/ing0928/openwrt-ax5-jdc/blob/main/configs/ipq60xx-ax5-jdc-6.12.config) | [![](https://img.shields.io/badge/下载-链接-blueviolet.svg?logo=hack-the-box)](https://github.com/ing0928/openwrt-ax5-jdc/releases/IPQ60XX-AX5-JDC) |
 
 
 ## 定制固件 [![](https://img.shields.io/badge/-项目基本编译教程-FFFFFF.svg)](#定制固件-)
