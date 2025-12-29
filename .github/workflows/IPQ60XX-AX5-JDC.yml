@@ -1,4 +1,4 @@
-name: IPQ60XX-AX5-JDC-6.12-WIFI
+name: IPQ60XX-AX5-JDC-6.12
 
 on:
   workflow_dispatch:
