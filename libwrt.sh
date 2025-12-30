@@ -12,5 +12,3 @@ chmod +x package/luci-app-athena-led/root/etc/init.d/athena_led package/luci-app
 
 # Lucky
 git clone --depth=1 https://github.com/gdy666/luci-app-lucky.git package/lucky
-
-git clone --depth=1 https://github.com/destan19/OpenAppFilter.git package/OpenAppFilter    
